@@ -18,8 +18,12 @@
             font-weight: 800;
         }
 
-        .page-header {
-            padding: 2rem;
+        .section-header {
+            min-width: 60rem;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .form-main {
@@ -170,11 +174,43 @@
             color: #555;
             word-break: break-word;
         }
+
+        @media screen and (max-width: 1024px) {
+            .section-header {
+                min-width: 40rem;
+            }
+
+            .form-container {
+                min-width: 40rem;
+            }
+
+            .form-row {
+                grid-template-columns: repeat(1, 1fr);
+            }
+
+        }
+
+        @media screen and (max-width: 599px) {
+            .section-header {
+                min-width: 25rem;
+            }
+
+            .form-container {
+                min-width: 25rem;
+            }
+
+            .form-row {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
     </style>
 
     <div class="main">
-        <div class="page-header">
-            <h2>Add Employee Profile</h2>
+        <div class="section-header">
+            <div>
+                <h2>Employee Profile</h2>
+                <p>Fill up the forms to add new employee profile.</p>
+            </div>
         </div>
 
         <form action="{% url 'add_employee' %}" method="POST" enctype="multipart/form-data">
