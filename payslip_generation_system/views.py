@@ -37,9 +37,9 @@ def login(request):
             # Successful login
             request.session['user_id'] = user[0]
             request.session['fullname'] = user[1]
-            request.session['user_type'] = user[7] 
+            request.session['user_type'] = user[8] 
             
-            if user[7] == 'employee':
+            if user[8] == 'employee':
                 # Redirect to employee dashboard
                 return JsonResponse({
                     'success': True, 
@@ -217,6 +217,7 @@ def delete_employee(request, emp_id):
     return JsonResponse({"success": False, "message": "Invalid request method!"})
 
 def employee_data_json(request):
+    print('USER TYPE OF LOGGED USER:', request.session.get('user_type'))
     user_type = request.session['user_type']
     draw = int(request.GET.get('draw', 1))
     start = int(request.GET.get('start', 0))
@@ -488,7 +489,8 @@ def payslip(request):
     ]
 
     # Get the current month
-    current_month = datetime.now().strftime('%B') 
+    current_month = datetime.now().strftime('%B')
+    current_year = datetime.now().strftime('%Y') 
 
     if request.method == 'POST':
         # Get form data
@@ -534,7 +536,7 @@ def payslip(request):
         late_min_total = late_adjustments.aggregate(Sum('details'))['details__sum'] or Decimal('0.00') 
         
         # Format the salary period
-        salary_period = f"{selected_month} - {selected_cutoff}"
+        salary_period = f"{selected_month} {current_year} - {selected_cutoff} Cutoff"
         
         #adjustment_minus
         all_adjustment_minus = Adjustment.objects.filter(
@@ -593,6 +595,7 @@ def payslip(request):
             'employees': employees,  # Make sure to pass the employees list here
             'month_choices': month_choices,
             'current_month': current_month,
+            'current_year' : current_year,
         }
 
         return render(request, 'payslip.html', context)
