@@ -3,176 +3,175 @@
 {% block title %}DENR NCR - PaGeS{% endblock title %}
 
 {% block content %}
-    <table id="employeeTable" class="table table-responsive table-striped table-bordered table-sm" cellspacing="0" width="100%" >
-        <thead>
-            <tr>
-                <th>Employee No</th>
-                <th>Fullname</th>
-                <th>Date Hired</th>
-                <th>Position</th>
-                <th>Education</th>
-                <th>Birthdate</th>
-                <th>Gender</th>
-                <th>Fund Source</th>
-                <th>Tax Declared</th>
-                <th>Salary</th>
-                <th>Eligibility</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-    </table>
+<h2>
+    Dashboard
+</h2>
 
-    <!-- Modal for Employee Details -->
-    <div class="modal fade" id="viewEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="viewEmployeeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="viewEmployeeModalLabel">Employee Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="employeeDetailsBody">
-                <!-- Employee details will be dynamically injected here -->
-            </div>
-            </div>
+<div class="card card-primary">
+  <div class="card-header">
+    <h3 class="card-title">Primary Card</h3>
+  </div>
+  <div class="card-body">
+    Content of the primary card.
+  </div>
+</div>
+
+<table id="employeeTable" class="table table-responsive table-striped table-bordered table-sm" cellspacing="0" width="100%" >
+    <thead>
+        <tr>
+            <th>Employee No</th>
+            <th>Fullname</th>
+            <th>Date Hired</th>
+            <th>Position</th>
+            <th>Education</th>
+            <th>Birthdate</th>
+            <th>Gender</th>
+            <th>Fund Source</th>
+            <th>Tax Declared</th>
+            <th>Salary</th>
+            <th>Eligibility</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+</table>
+
+<!-- Modals -->
+<!-- Employee Details -->
+<div class="modal fade" id="viewEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="viewEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="viewEmployeeModalLabel">Employee Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="employeeDetailsBody">
+            <!-- Employee details will be dynamically injected here -->
+        </div>
         </div>
     </div>
+</div>
 
-    <script>
-        $(document).ready(function() {
-            $('#employeeTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: "{% url 'employee_data_json' %}"
-            });
+<script>
+    $(document).ready(function() {
+        $('#employeeTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{% url 'employee_data_json' %}"
+        });
 
-            // Edit button click
-            $(document).on('click', '.edit-btn', function() {
-                var empId = $(this).data('id');
-                window.location.href = '/employee/edit/' + empId + '/';
-            });
+        // Edit button click
+        $(document).on('click', '.edit-btn', function() {
+            var empId = $(this).data('id');
+            window.location.href = '/employee/edit/' + empId + '/';
+        });
 
-            // Delete button click
-            $(document).on('click', '.delete-btn', function(event) {
-                event.preventDefault();
-                event.stopImmediatePropagation();
+        // Delete button click
+        $(document).on('click', '.delete-btn', function(event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
 
-                var empId = $(this).data('id');
-                
-                // Confirm deletion
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'This action cannot be undone!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Perform AJAX request to delete the employee
-                        $.ajax({
-                            type: 'POST',
-                            url: '/employee/delete/' + empId + '/',
-                            data: {
-                                csrfmiddlewaretoken: '{{ csrf_token }}'
-                            },
-                            success: function(response) {
-                                if (response.success) {
-                                    Swal.fire(
-                                        'Deleted!',
-                                        'The employee record has been deleted.',
-                                        'success'
-                                    ).then(function() {
-                                        location.reload();  // Reload the page after deletion
-                                    });
-                                }
-                            },
-                            error: function(xhr, status, error) {
+            var empId = $(this).data('id');
+            
+            // Confirm deletion
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This action cannot be undone!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Perform AJAX request to delete the employee
+                    $.ajax({
+                        type: 'POST',
+                        url: '/employee/delete/' + empId + '/',
+                        data: {
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            if (response.success) {
                                 Swal.fire(
-                                    'Error!',
-                                    'There was an error while deleting the employee.',
-                                    'error'
-                                );
+                                    'Deleted!',
+                                    'The employee record has been deleted.',
+                                    'success'
+                                ).then(function() {
+                                    location.reload();  // Reload the page after deletion
+                                });
                             }
-                        });
-                    }
-                });
-            });
-
-            // view employee
-            $(document).on('click', '.view-btn', function () {
-                const employeeId = $(this).data('id');
-                
-                // Show loading state in the modal
-                $('#employeeDetailsBody').html('<div class="text-center">Loading...</div>');
-
-                $.ajax({
-                    url: `/employee/view/${employeeId}/`,  // Ensure this route matches the Django view
-                    method: 'GET',
-                    success: function (response) {
-                        const employee = response.employee;
-                        
-                        // Fill the modal with employee data
-                        $('#employeeDetailsBody').html(`
-                            <table class="table table-bordered">
-                                <tr><th>Full Name</th><td>${employee.fullname}</td></tr>
-                                <tr><th>Date Hired</th><td>${employee.date_hired}</td></tr>
-                                <tr><th>Position</th><td>${employee.position}</td></tr>
-                                <tr><th>Educational Attainment</th><td>${employee.educational_attainment}</td></tr>
-                                <tr><th>Birthdate</th><td>${employee.birthdate}</td></tr>
-                                <tr><th>Gender</th><td>${employee.gender}</td></tr>
-                                <tr><th>Fund Source</th><td>${employee.fund_source}</td></tr>
-                                <tr><th>Tax Declaration</th><td>${employee.tax_declaration}</td></tr>
-                                <tr><th>Salary</th><td>${employee.salary}</td></tr>
-                                <tr><th>Eligibility</th><td>${employee.eligibility}</td></tr>
-                                <tr>
-                                    <th>Attachments</th>
-                                    <td>
-                                        ${employee.attachments.length > 0 ? 
-                                            '<ul>' + employee.attachments.map(attachment => `
-                                                <li>
-                                                    <a href="${attachment.file_url}" target="_blank">${attachment.file_name}</a>
-                                                </li>
-                                            `).join('') + '</ul>' 
-                                            : '<em>No attachments</em>'}
-                                    </td>
-                                </tr>
-                            </table>
-                        `);
-
-                        // Show the modal
-                        $('#viewEmployeeModal').modal('show');
-                    },
-                    error: function () {
-                        $('#employeeDetailsBody').html('<div class="text-danger text-center">Failed to load employee data.</div>');
-                    }
-                });
-            });
-
-            // Adjustmets button click
-            $(document).on('click', '.adjustments-btn', function() {
-                var empId = $(this).data('id');
-                window.location.href = '/employee/adjustments/' + empId + '/';
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire(
+                                'Error!',
+                                'There was an error while deleting the employee.',
+                                'error'
+                            );
+                        }
+                    });
+                }
             });
         });
 
-        $('#myTable').DataTable({
-            autoWidth: false
+        // view employee
+        $(document).on('click', '.view-btn', function () {
+            const employeeId = $(this).data('id');
+            
+            // Show loading state in the modal
+            $('#employeeDetailsBody').html('<div class="text-center">Loading...</div>');
+
+            $.ajax({
+                url: `/employee/view/${employeeId}/`,  // Ensure this route matches the Django view
+                method: 'GET',
+                success: function (response) {
+                    const employee = response.employee;
+                    
+                    // Fill the modal with employee data
+                    $('#employeeDetailsBody').html(`
+                        <table class="table table-bordered">
+                            <tr><th>Full Name</th><td>${employee.fullname}</td></tr>
+                            <tr><th>Date Hired</th><td>${employee.date_hired}</td></tr>
+                            <tr><th>Position</th><td>${employee.position}</td></tr>
+                            <tr><th>Educational Attainment</th><td>${employee.educational_attainment}</td></tr>
+                            <tr><th>Birthdate</th><td>${employee.birthdate}</td></tr>
+                            <tr><th>Gender</th><td>${employee.gender}</td></tr>
+                            <tr><th>Fund Source</th><td>${employee.fund_source}</td></tr>
+                            <tr><th>Tax Declaration</th><td>${employee.tax_declaration}</td></tr>
+                            <tr><th>Salary</th><td>${employee.salary}</td></tr>
+                            <tr><th>Eligibility</th><td>${employee.eligibility}</td></tr>
+                            <tr>
+                                <th>Attachments</th>
+                                <td>
+                                    ${employee.attachments.length > 0 ? 
+                                        '<ul>' + employee.attachments.map(attachment => `
+                                            <li>
+                                                <a href="${attachment.file_url}" target="_blank">${attachment.file_name}</a>
+                                            </li>
+                                        `).join('') + '</ul>' 
+                                        : '<em>No attachments</em>'}
+                                </td>
+                            </tr>
+                        </table>
+                    `);
+
+                    // Show the modal
+                    $('#viewEmployeeModal').modal('show');
+                },
+                error: function () {
+                    $('#employeeDetailsBody').html('<div class="text-danger text-center">Failed to load employee data.</div>');
+                }
+            });
         });
-    </script>
 
-    <style>
-        table.dataTable {
-            width: 100% !important;
-            table-layout: fixed !important;
-        }
+        // Adjustmets button click
+        $(document).on('click', '.adjustments-btn', function() {
+            var empId = $(this).data('id');
+            window.location.href = '/employee/adjustments/' + empId + '/';
+        });
+    });
 
-        table.dataTable th, table.dataTable td {
-            width: calc(85% / 11);
-        }
-
-        table.dataTable th:nth-child(12), table.dataTable td:nth-child(12) {
-            width: 1rem;
-        }
-    </style>
+    $('#myTable').DataTable({
+        autoWidth: false
+    });
+</script>
 {% endblock %}

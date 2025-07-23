@@ -11,17 +11,19 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% include 'includes/loader.html' %}
 </head>
-<body>
-    
-    {% include 'includes/navbar.html' %}
+<body class="hold-transition sidebar-mini layout-fixed">
 
-    <div class="content-wrapper">
-        {% block content %}
-        <!-- Content from child templates will go here -->
-        {% endblock %}
+    <div class="wrapper">
+        {% include 'includes/navbar.html' %}
+
+        <div class="content-wrapper px-4 py-4">
+            {% block content %}
+            <!-- Content -->
+            {% endblock %}
+        </div>
+
+        {% include 'includes/footer.html' %} 
     </div>
-
-    {% include 'includes/footer.html' %}
     
     <!-- Django messages via swal -->
     {% if messages %}
@@ -40,3 +42,32 @@
     {% endif %}
 </body>
 </html>
+
+<style>
+{% comment %} Global Styles {% endcomment %}
+p {
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    color: #2c3e50;
+    font-weight: 800;
+}
+
+body {
+    height: 100%;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-heigh: 100vh;
+}
+
+.content-wrapper {
+    flex: 1;
+}
+
+</style>
+

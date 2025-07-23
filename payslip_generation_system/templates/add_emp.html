@@ -4,399 +4,198 @@
 
 
 {% block content %}
-
-    <style>
-        .main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        h2 {
-            color: #2c3e50;
-            font-weight: 800;
-        }
-
-        .section-header {
-            min-width: 60rem;
-            margin-top: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .form-main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 2rem
-        }
-
-        .form-container {
-            background: #ffffff;
-            min-width: 60rem;
-            padding: 2rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-header {
-            display: flex;
-            align-items: center;
-            justify-items: flex-start;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .btn-submit {
-            background-color: #3498db;
-            color: white;
-            padding: 12px 20px;
-            margin-top: 25px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            transition: 
-                background-color 0.3s,
-                color 0.3s,
-                transform 0.2s,
-                box-shadow 0.2s;
-        }
-
-        .btn-submit:hover {
-            background-color: #2980b9;
-            color: #e0e0e0;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-        }
-
-
-        label {
-            font-weight: 800;
-            margin-top: 1.5rem;
-            display: block;
-            color: #34495e;
-        }
-
-        input[type="text"],
-        input[type="date"],
-        input[type="number"],
-        select,
-        input[type="file"] {
-            width: 100%;
-            padding: 10px 12px;
-            margin-top: 6px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: 
-                border-color 0.3s,
-                box-shadow 0.3s,
-                background-color 0.3s;
-            background-color: #fff;
-        }
-
-        input[type="text"]:hover,
-        input[type="date"]:hover,
-        input[type="number"]:hover,
-        select:hover,
-        input[type="file"]:hover {
-            border-color: #bbb;
-            background-color: #f9f9f9;
-        }
-
-        input[type="text"]:focus,
-        input[type="date"]:focus,
-        input[type="number"]:focus,
-        select:focus,
-        input[type="file"]:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
-            outline: none;
-            background-color: #fff;
-        }
-
-
-        /* input[type="file"] {
-            padding: 8px;
-            background: #f8f8f8;
-        } */
-
-        .file-upload-input {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            max-height: 2.5rem;
-        }
-
-        .file-upload {
-            display: inline-block;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            background: #f8f8f8;
-            color: #333;
-            font-size: 14px;
-            font-weight: 800;
-            cursor: pointer;
-            padding: 8px 12px;
-            transition: background 0.3s, border-color 0.3s;
-        }
-
-        .file-upload:hover {
-            background: #eee;
-            border-color: #3498db;
-            color: #000;
-        }
-
-        .file-upload input[type="file"] {
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            cursor: pointer;
-            height: 100%;
-            width: 100%;
-        }
-
-        .file-names {
-            margin-top: 8px;
-            font-size: 1rem;
-            color: #555;
-            word-break: break-word;
-        }
-
-        @media screen and (max-width: 1024px) {
-            .section-header {
-                min-width: 40rem;
-            }
-
-            .form-container {
-                min-width: 40rem;
-            }
-
-            .form-row {
-                grid-template-columns: repeat(1, 1fr);
-            }
-
-        }
-
-        @media screen and (max-width: 599px) {
-            .section-header {
-                min-width: 25rem;
-            }
-
-            .form-container {
-                min-width: 25rem;
-            }
-
-            .form-row {
-                grid-template-columns: repeat(1, 1fr);
-            }
-        }
-    </style>
-
-    <div class="main">
-        <div class="section-header">
-            <div>
-                <h2>Employee Profile</h2>
-                <p>Fill up the forms to add new employee profile.</p>
-            </div>
+<div class="main">
+    <div class="section-header">
+        <div>
+            <h2>Employee Profile</h2>
+            <p>Fill up the forms to add new employee profile.</p>
         </div>
-
-        <form action="{% url 'add_employee' %}" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-main">
-                <div class="form-container">
-                    <div class="form-header">
-                        <h2>Personal Details</h2>
-                    </div>
-
-                    <div class="form-body">
-                        <div class="form-row">
-                            <div class="form-field">
-                                <label for="fullname">Full Name</label>
-                                <input type="text" id="fullname" name="fullname" placeholder="Employee full name" required>
-                            </div>
-                            <div class="form-field">
-                                <label for="birthdate">Birthdate</label>
-                                <input type="date" id="birthdate" name="birthdate" required>
-                            </div>
-                        </div>
-
-                        <div class="form-field">
-                            <label for="address">Permanent Address</label>
-                            <input type="text" id="address" name="address" placeholder="Employee permanent address" required>
-                        </div>
-
-                        <div class="form-field">
-                            <label for="contact">Contact Number</label>
-                            <input type="text" id="contact" name="contact" placeholder="Employee Contact Number" required>
-                        </div>
-
-                        <div class="form-field">
-                            <label for="educational_attainment">Educational Attainment</label>
-                            <select id="educational_attainment" name="educational_attainment" required>
-                                <option value="">-- Select --</option>
-                                <option value="High School">High School</option>
-                                <option value="Vocational">Vocational</option>
-                                <option value="College">College</option>
-                                <option value="Post-Graduate">Post-Graduate</option>
-                            </select>
-                        </div>
-
-                        <div class="form-field">
-                            <label for="gender">Gender</label>
-                            <select id="gender" name="gender" required>
-                                <option value="">-- Select --</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-container">
-                    <div class="form-header">
-                        <h2>Employment Details</h2>
-                    </div>
-
-                    <div class="form-body">
-                        <div class="form-field">
-                            <label for="fullname">Employee No</label>
-                            <input type="text" name="employee_no" placeholder="Employee Number" required>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-field">
-                                <label for="position">Position</label>
-                                <input type="text" id="position" name="position" placeholder="Employee Position" required>
-                            </div>
-                            <div class="form-field">
-                                <label for="date_hired">Date Hired</label>
-                                <input type="date" id="date_hired" name="date_hired" required>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-field">
-                                <label for="division">Division</label>
-                                    <select id="division" name="division" required>
-                                    <option value="">-- Select --</option>
-                                    {% for division in divisions %}
-                                        <option value="{{ division.0 }}">{{ division.3 }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="form-field">
-                                <label for="section">Section</label>
-                                    <select id="section" name="section" required>
-                                    <option value="">-- Select --</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-container">
-                    <div class="form-header">
-                        <h2>Employee Salary Details</h2>
-                    </div>
-
-                    <div class="form-body">
-                        <div class="form-field">
-                            <label for="fund_source">Fund Source</label>
-                            <select id="fund_source" name="fund_source" required>
-                                <option value="">-- Select --</option>
-                                <option value="Regular">Regular</option>
-                                <option value="PRCMO">PRCMO</option>
-                                <option value="Manila Bay">Manila Bay</option>
-                            </select>
-                        </div>
-
-                        <div class="form-field">
-                            <label for="salary">Salary (₱)</label>
-                            <input type="number" id="salary" name="salary" min="0" step="0.01" placeholder="Employee Salary" required>
-                        </div>
-
-                        <div class="form-field">
-                            <label for="with_tax_declaration">With Tax Declaration?</label>
-                            <select id="with_tax_declaration" name="with_tax_declaration" required>
-                                <option value="">-- Select --</option>
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-                        </div>
-
-                        <div class="form-field">
-                            <label for="eligibility">Eligibility</label>
-                            <select id="eligibility" name="eligibility" required>
-                                <option value="">-- Select --</option>
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-                        </div>
-
-                        <div class="form-field">
-                            <label for="attachments">Attachments</label>
-                            <div class="file-upload-input">
-                                <div class="file-upload">
-                                    <input type="file" id="attachments" name="attachments" multiple>
-                                    <span id="fileLabel">📁 Upload Files</span>
-                                </div>
-                                <p id="fileNames" class="file-names">No files selected</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                
-            <button class="btn-submit" type="submit">Add Employee</button>
-        </form>
     </div>
 
-    <script>
-        // Show the Section when there is Division Selected
-        document.getElementById('division').addEventListener('change', function () {
-            var selectedDivisionId = this.value;
-            var sectionSelect = document.getElementById('section');
+    <form action="{% url 'add_employee' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-main">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Personal Details</h2>
+                </div>
 
-            // Clear all current options
-            sectionSelect.innerHTML = '<option value="">-- Select --</option>';
+                <div class="form-body">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="fullname">Full Name</label>
+                            <input type="text" id="fullname" name="fullname" placeholder="Employee full name" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="birthdate">Birthdate</label>
+                            <input type="date" id="birthdate" name="birthdate" required>
+                        </div>
+                    </div>
 
-            // Get all section options from a hidden template or initial data
-            {% for section in sections %}
-                var divisionId = "{{ section.1 }}";
-                if (divisionId === selectedDivisionId) {
-                    var opt = document.createElement('option');
-                    opt.value = "{{ section.0 }}";
-                    opt.text = "{{ section.3 }}";
-                    sectionSelect.appendChild(opt);
-                }
-            {% endfor %}
-        });
+                    <div class="form-field">
+                        <label for="address">Permanent Address</label>
+                        <input type="text" id="address" name="address" placeholder="Employee permanent address" required>
+                    </div>
 
-        // Show the name of the file uploaded or Count the number of files
-        const fileInput = document.getElementById('attachments');
-        const fileNames = document.getElementById('fileNames');
+                    <div class="form-field">
+                        <label for="contact">Contact Number</label>
+                        <input type="text" id="contact" name="contact" placeholder="Employee Contact Number" required>
+                    </div>
 
-        fileInput.addEventListener('change', () => {
-            if (fileInput.files.length === 0) {
-                fileNames.textContent = 'No files selected';
-            } else if (fileInput.files.length === 1) {
-                fileNames.textContent = fileInput.files[0].name;
-            } else {
-                fileNames.textContent = `${fileInput.files.length} files selected`;
+                    <div class="form-field">
+                        <label for="educational_attainment">Educational Attainment</label>
+                        <select id="educational_attainment" name="educational_attainment" required>
+                            <option value="">-- Select --</option>
+                            <option value="High School">High School</option>
+                            <option value="Vocational">Vocational</option>
+                            <option value="College">College</option>
+                            <option value="Post-Graduate">Post-Graduate</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">-- Select --</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Employment Details</h2>
+                </div>
+
+                <div class="form-body">
+                    <div class="form-field">
+                        <label for="fullname">Employee No</label>
+                        <input type="text" name="employee_no" placeholder="Employee Number" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="position">Position</label>
+                            <input type="text" id="position" name="position" placeholder="Employee Position" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="date_hired">Date Hired</label>
+                            <input type="date" id="date_hired" name="date_hired" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="division">Division</label>
+                                <select id="division" name="division" required>
+                                <option value="">-- Select --</option>
+                                {% for division in divisions %}
+                                    <option value="{{ division.0 }}">{{ division.3 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="section">Section</label>
+                                <select id="section" name="section" required>
+                                <option value="">-- Select --</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Employee Salary Details</h2>
+                </div>
+
+                <div class="form-body">
+                    <div class="form-field">
+                        <label for="fund_source">Fund Source</label>
+                        <select id="fund_source" name="fund_source" required>
+                            <option value="">-- Select --</option>
+                            <option value="Regular">Regular</option>
+                            <option value="PRCMO">PRCMO</option>
+                            <option value="Manila Bay">Manila Bay</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="salary">Salary (₱)</label>
+                        <input type="number" id="salary" name="salary" min="0" step="0.01" placeholder="Employee Salary" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="with_tax_declaration">With Tax Declaration?</label>
+                        <select id="with_tax_declaration" name="with_tax_declaration" required>
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="eligibility">Eligibility</label>
+                        <select id="eligibility" name="eligibility" required>
+                            <option value="">-- Select --</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="attachments">Attachments</label>
+                        <div class="file-upload-input">
+                            <div class="file-upload">
+                                <input type="file" id="attachments" name="attachments" multiple>
+                                <span id="fileLabel">📁 Upload Files</span>
+                            </div>
+                            <p id="fileNames" class="file-names">No files selected</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+        <button class="btn-submit" type="submit">Add Employee</button>
+    </form>
+</div>
+
+<script>
+    // Show the Section when there is Division Selected
+    document.getElementById('division').addEventListener('change', function () {
+        var selectedDivisionId = this.value;
+        var sectionSelect = document.getElementById('section');
+
+        // Clear all current options
+        sectionSelect.innerHTML = '<option value="">-- Select --</option>';
+
+        // Get all section options from a hidden template or initial data
+        {% for section in sections %}
+            var divisionId = "{{ section.1 }}";
+            if (divisionId === selectedDivisionId) {
+                var opt = document.createElement('option');
+                opt.value = "{{ section.0 }}";
+                opt.text = "{{ section.3 }}";
+                sectionSelect.appendChild(opt);
             }
-        });
-    </script>
+        {% endfor %}
+    });
+
+    // Show the name of the file uploaded or Count the number of files
+    const fileInput = document.getElementById('attachments');
+    const fileNames = document.getElementById('fileNames');
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length === 0) {
+            fileNames.textContent = 'No files selected';
+        } else if (fileInput.files.length === 1) {
+            fileNames.textContent = fileInput.files[0].name;
+        } else {
+            fileNames.textContent = `${fileInput.files.length} files selected`;
+        }
+    });
+</script>
 {% endblock %}
