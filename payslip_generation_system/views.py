@@ -64,10 +64,10 @@ def login(request):
     return render(request, 'login.html')
 
 def dashboard(request):
-    if(request.session.get('user_type') == 'employee'):
-        return render(request, 'payslip.html')
-    else:
+    if (request.session.get('user_type') != 'employee'):
         return render(request, 'dashboard.html')
+    else:
+        return render(request, 'payslip.html')
 
 def add_employee(request):
     if request.method == 'POST':
@@ -318,7 +318,6 @@ def employee_data_json(request):
         'data': data
     })
 
-    
 def view_employee(request, emp_id):
     employee = get_object_or_404(Employee, id=emp_id)
     attachments = EmployeeAttachment.objects.filter(employee=employee)
@@ -470,7 +469,6 @@ def payslip(request):
         employees = Employee.objects.filter(fullname=fullname)
     else:
         employees = Employee.objects.all()
-    # employees = Employee.objects.all()
     
     # Define month choices (you can make this dynamic if needed)
     month_choices = [
@@ -512,15 +510,29 @@ def payslip(request):
             messages.error(request, 'Payslip in process.')
             return redirect('payslip')
         
-        # Assuming salary is stored as an amount, adjust accordingly
-        basic_salary = employee.salary  # This might be calculated or stored in a field
-        
-        if(employee.tax_declaration == "Yes"):
+        # Basic Salary
+        basic_salary = employee.salary
+        # Annual Salary
+        basic_salary_annual = basic_salary * 12
+        # Cutoff Salary
+        basic_salary_cutoff = basic_salary / 2  
+
+        # Deduction Conditions
+
+        # Salary
+        if (employee.tax_declaration == "Yes"):
              tax_deduction = Decimal('0.00')
         else:
-            tax_deduction = employee.salary/2 * Decimal('0.03')  # Example: 10% tax deduction
+            if (basic_salary_annual >= 250000):
+                tax_deduction = basic_salary_cutoff * Decimal('0.08')
+            else:
+                tax_deduction = basic_salary_cutoff * Decimal('0.03')
         
-        philhealth = employee.salary/2 * Decimal('0.05')
+        # Philhealth 
+        if (basic_salary_cutoff > 9999):
+            philhealth = basic_salary_cutoff * Decimal('0.05')
+        else:
+            philhealth = basic_salary_cutoff - 500
         
         #late
         late_adjustments = Adjustment.objects.filter(
@@ -550,11 +562,7 @@ def payslip(request):
         
         # Sum the amount for all adjustments
         total_adjustment_amount_minus = all_adjustment_minus.aggregate(Sum('amount'))['amount__sum'] or Decimal('0.00')
-
-
-     
         total_deductions = tax_deduction + philhealth + late_amt_total + total_adjustment_amount_minus
-
 
         #adjustment_plus
         all_adjustment_plus = Adjustment.objects.filter(
@@ -571,8 +579,6 @@ def payslip(request):
         
         total_add = total_adjustment_amount_plus
         
-        basic_salary_cutoff = basic_salary / 2  # Assuming the salary is for a month and you want half for the cutoff
-        
         context = {
             'employee_no': employee.employee_no,
             'employee_name': employee.fullname,
@@ -581,6 +587,7 @@ def payslip(request):
             'salary_period': salary_period,
             'selected_cutoff': selected_cutoff,
             'basic_salary_cutoff': basic_salary_cutoff,
+            'basic_salary_annual': basic_salary_annual,
             'tax_deduction': tax_deduction,
             'philhealth': philhealth,
             'late_amt_total': late_amt_total,
